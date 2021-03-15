@@ -1,3 +1,3 @@
 leetCode solutions in JavaScript
 
-Here is my YouTube Channel https://www.youtube.com/channel/UC0qiieVBpjA6YODgIFf6Afg
+For detail explanation, you can see the videos on my channel https://www.youtube.com/channel/UC0qiieVBpjA6YODgIFf6Afg
