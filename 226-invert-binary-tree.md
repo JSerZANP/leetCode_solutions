@@ -1,3 +1,4 @@
+My video explaining this: https://youtu.be/B8QkJDF4WZw
 ```js
 /**
  * Definition for a binary tree node.
