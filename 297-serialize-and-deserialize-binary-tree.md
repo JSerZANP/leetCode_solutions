@@ -1,6 +1,9 @@
 A video explaining this: https://youtu.be/BdYiijeQ680
 
 ```js
+A video explaining this: https://youtu.be/BdYiijeQ680
+
+```js
 /**
  * Definition for a binary tree node.
  * function TreeNode(val) {
@@ -16,26 +19,23 @@ A video explaining this: https://youtu.be/BdYiijeQ680
  * @return {string}
  */
 var serialize = function(root) {
-  if (root === null) return `[]`
-  const result = []
-  
-  const queue = [root]
-  while (queue.length > 0) {
-    const head = queue.shift()
-    result.push(head === null ? null : head.val)
+    const result = []
     
-    if (head) {
-      queue.push(head.left)
-      queue.push(head.right)
+    const walk = (node) => {
+        if (node === null) {
+            result.push(null)
+            return
+        } else {
+            result.push(node.val)
+        }
+        
+        walk(node.left)
+        walk(node.right)
     }
-  }
-  
-  // remove trailing null
-  while (result[result.length - 1] === null) {
-    result.pop()
-  }
-
-  return JSON.stringify(result)
+    
+    walk(root)
+    
+    return JSON.stringify(result)
 };
 
 /**
@@ -45,31 +45,36 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data) {
-  const arr = JSON.parse(data)
-  if (!arr || arr.length === 0 || arr[0] === null) return null
-  
-  const top = new TreeNode(arr.shift())
-  const prevLayer = [top]
-  
-  while (arr.length > 0) {
-    const left = arr.shift() ?? null
-    const right = arr.shift() ?? null
-    const root = prevLayer.shift()
+    if (!data) {
+        return null
+    }
     
-    const leftNode = left === null ? null : new TreeNode(left)
-    root.left = leftNode
-    const rightNode = right === null ? null : new TreeNode(right)
-    root.right = rightNode
+    const arr = JSON.parse(data)
     
-    if (left !== null) prevLayer.push(leftNode)
-    if (right !== null) prevLayer.push(rightNode)
-  }
-  
-  return top
+    if (arr.length === 0 || arr[0] === null) {
+        return null
+    }
+    
+    const build = () => {
+        const item = arr.shift()
+        if (item === null) {
+            return null
+        }
+        const node = new TreeNode(item)
+        node.left = build()
+        node.right = build()
+        return node
+    }
+    
+    const root = build(0)
+    
+    return root
 };
 
 /**
  * Your functions will be called as such:
  * deserialize(serialize(root));
  */
+ ```
+
  ```
