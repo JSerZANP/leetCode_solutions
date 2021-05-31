@@ -1,9 +1,6 @@
 A video explaining this: https://youtu.be/BdYiijeQ680
 
 ```js
-A video explaining this: https://youtu.be/BdYiijeQ680
-
-```js
 /**
  * Definition for a binary tree node.
  * function TreeNode(val) {
@@ -75,6 +72,4 @@ var deserialize = function(data) {
  * Your functions will be called as such:
  * deserialize(serialize(root));
  */
- ```
-
  ```
