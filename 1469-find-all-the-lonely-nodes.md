@@ -17,17 +17,17 @@ Here is me explaining this on youtube: https://youtu.be/t6zmAgkpbws
 // Space: O(1)
 // var getLonelyNodes = function(root) {
 //     if (root === null) return []
-  
+
 //     // walk on each node collect the lonely children
 //     const walk = (node, lonelyNodes) => {
-      
+
 //       if (node.left !== null) {
 //         if (node.right === null) {
 //           lonelyNodes.push(node.left.val)
 //         }
 //         walk(node.left, lonelyNodes)
 //       }
-      
+
 //       if (node.right !== null) {
 //         if (node.left === null) {
 //           lonelyNodes.push(node.right.val)
@@ -35,35 +35,35 @@ Here is me explaining this on youtube: https://youtu.be/t6zmAgkpbws
 //         walk(node.right, lonelyNodes)
 //       }
 //     }
-    
+
 //     const lonelyNodes = []
 //     walk(root, lonelyNodes)
 //     return lonelyNodes
 // };
 
-var getLonelyNodes = function(root) {
-  if (root === null) return []
-  
-  const lonelyNodes = []
-  const queue = [root]
-  
+var getLonelyNodes = function (root) {
+  if (root === null) return [];
+
+  const lonelyNodes = [];
+  const queue = [root];
+
   while (queue.length > 0) {
-    const head = queue.shift()
+    const head = queue.shift();
     if (head.left !== null) {
       if (head.right === null) {
-        lonelyNodes.push(head.left.val)
+        lonelyNodes.push(head.left.val);
       }
-      queue.push(head.left)
+      queue.push(head.left);
     }
 
     if (head.right !== null) {
       if (head.left === null) {
-        lonelyNodes.push(head.right.val)
+        lonelyNodes.push(head.right.val);
       }
-      queue.push(head.right)
+      queue.push(head.right);
     }
   }
-  
-  return lonelyNodes
-}
+
+  return lonelyNodes;
+};
 ```

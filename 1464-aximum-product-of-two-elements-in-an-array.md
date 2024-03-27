@@ -1,6 +1,5 @@
 Me explaining it on youtube: https://youtu.be/S3vgXAgFY6E
 
-
 ```js
 /**
  * @param {number[]} nums
@@ -12,7 +11,7 @@ Me explaining it on youtube: https://youtu.be/S3vgXAgFY6E
 // var maxProduct = function(nums) {
 //     // get the top 2 largest numbers
 //     const top2 = [-Infinity, -Infinity]
-    
+
 //     for (let num of nums) {
 //       if (num >= top2[0]) {
 //         top2[1] = top2[0]
@@ -21,7 +20,7 @@ Me explaining it on youtube: https://youtu.be/S3vgXAgFY6E
 //         top2[1] = num
 //       }
 //     }
-  
+
 //     return (top2[0] - 1) * (top2[1] - 1)
 // };
 
@@ -40,7 +39,7 @@ class PriorityQueue {
   }
 
   peek() {
-    return this.items[1]
+    return this.items[1];
   }
 
   add(element) {
@@ -60,7 +59,7 @@ class PriorityQueue {
       this.items[i] = this.items[parentIndex];
       i = parentIndex;
     }
-  
+
     this.items[i] = element;
   }
 
@@ -82,9 +81,9 @@ class PriorityQueue {
     // set the last child to the root
     const newTop = this.items.pop();
     if (this.size === 0) {
-      return result
+      return result;
     }
-    
+
     this.items[root] = newTop;
 
     // move it down to the right position
@@ -128,25 +127,24 @@ class PriorityQueue {
 
 // Time: O(n)
 // space: O(2) => O(1)
-var maxProduct = function(nums) {
-    // get the top 2 largest numbers
-    const top2 = new PriorityQueue((a, b) => a - b)
-    
-    // O(2 * n * log2)
-    for (let num of nums) {
-      top2.add(num)
-      if (top2.size > 2) {
-        top2.poll()
-      }
-    }
-  
-    let product = 1
-    // O(2 * log2)
-    while (top2.size > 0) {
-      product *= (top2.poll() - 1)
-    }
-  
-    return product
-};
+var maxProduct = function (nums) {
+  // get the top 2 largest numbers
+  const top2 = new PriorityQueue((a, b) => a - b);
 
+  // O(2 * n * log2)
+  for (let num of nums) {
+    top2.add(num);
+    if (top2.size > 2) {
+      top2.poll();
+    }
+  }
+
+  let product = 1;
+  // O(2 * log2)
+  while (top2.size > 0) {
+    product *= top2.poll() - 1;
+  }
+
+  return product;
+};
 ```
