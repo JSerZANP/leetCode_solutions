@@ -84,10 +84,7 @@ var fullJustify = function (words, maxWidth) {
   let buffer = [];
   let wordWidthInBuffer = 0;
   for (const word of words) {
-    if (
-      wordWidthInBuffer + word.length + Math.max(0, buffer.length) <=
-      maxWidth
-    ) {
+    if (wordWidthInBuffer + word.length + buffer.length <= maxWidth) {
       buffer.push(word);
       wordWidthInBuffer += word.length;
     } else {
