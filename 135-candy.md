@@ -1,3 +1,5 @@
+## 1. Naive solution
+
 ```js
 /**
  * @param {number[]} ratings
@@ -84,5 +86,36 @@ var candy = function (ratings) {
     return result + count;
   }, 0);
   return totalCandies;
+};
+```
+
+## 2. Easier thoughts
+
+we only need to assign one more candy for members on the upward slope.
+We need to do it from both sides.
+
+```js
+/**
+ * @param {number[]} ratings
+ * @return {number}
+ */
+var candy = function (ratings) {
+  // scan twice from left and right
+  // init the candy 1 for each
+  // if we find an upward slope, update the candy by max(current, prev + 1)
+  const candies = new Array(ratings.length).fill(1);
+
+  for (let i = 0; i < candies.length; i++) {
+    if (i > 0 && ratings[i] > ratings[i - 1]) {
+      candies[i] = Math.max(candies[i - 1] + 1, candies[i]);
+    }
+  }
+
+  for (let i = candies.length - 1; i >= 0; i--) {
+    if (i < candies.length - 1 && ratings[i] > ratings[i + 1]) {
+      candies[i] = Math.max(candies[i + 1] + 1, candies[i]);
+    }
+  }
+  return candies.reduce((a, b) => a + b);
 };
 ```

@@ -87,3 +87,44 @@ var canCompleteCircuit = function (gas, cost) {
   return -1;
 };
 ```
+
+Another try
+
+```js
+/**
+ * @param {number[]} gas
+ * @param {number[]} cost
+ * @return {number}
+ */
+var canCompleteCircuit = function (gas, cost) {
+  // [2, 3, 4], cost = [3,4, 3]
+  // [-1, -1, 1]
+
+  const profit = gas.map((amount, i) => amount - cost[i]);
+  let tank = 0; // 1
+  let i = 0; // 2
+  while (i < profit.length) {
+    let start = i;
+    let j = start; //
+    while (true) {
+      tank += profit[j]; // -1
+      if (tank < 0) {
+        start = j + 1;
+        tank = 0;
+        break;
+      }
+
+      j = (j + 1) % profit.length;
+
+      if (j === start) {
+        return j;
+      }
+    }
+    if (start <= i) {
+      break;
+    }
+    i = start;
+  }
+  return -1;
+};
+```

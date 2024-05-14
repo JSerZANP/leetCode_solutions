@@ -31,3 +31,33 @@ var convert = function (s, numRows) {
   return rows.join("");
 };
 ```
+
+Another try
+
+```js
+/**
+ * @param {string} s
+ * @param {number} numRows
+ * @return {string}
+ */
+var convert = function (s, numRows) {
+  if (s.length === 0) return s;
+  if (numRows === 1) return s;
+
+  const rows = new Array(numRows).fill("");
+  let currentRow = -1;
+  let direction = 1;
+  let i = 0;
+  while (i < s.length) {
+    let nextRow = currentRow + direction;
+    if (nextRow >= numRows || nextRow < 0) {
+      direction *= -1;
+      nextRow = currentRow + direction;
+    }
+    currentRow = nextRow;
+    rows[currentRow] += s[i];
+    i += 1;
+  }
+  return rows.join("");
+};
+```

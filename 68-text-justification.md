@@ -117,3 +117,44 @@ var fullJustify = function (words, maxWidth) {
   });
 };
 ```
+
+Another try
+
+```js
+/**
+ * @param {string[]} words
+ * @param {number} maxWidth
+ * @return {string[]}
+ */
+var fullJustify = function (words, maxWidth) {
+  const rows = []; // 2d array of string
+  let buffer = [];
+  let currentLength = 0;
+  for (const word of words) {
+    if (buffer.length + currentLength + word.length > maxWidth) {
+      rows.push(buffer);
+      buffer = [word];
+      currentLength = word.length;
+    } else {
+      buffer.push(word);
+      currentLength += word.length;
+    }
+  }
+  if (buffer.length > 0) {
+    rows.push(buffer);
+  }
+  return rows.map((row, i) => {
+    if (i === rows.length - 1 || row.length === 1) {
+      return row.join(" ").padEnd(maxWidth, " ");
+    }
+    const totalLength = row.reduce((a, b) => a + b.length, 0);
+    const totalSpaceCount = maxWidth - totalLength;
+    const baseSpaceCount = Math.floor(totalSpaceCount / (row.length - 1));
+    const restSpaceCount = totalSpaceCount % (row.length - 1);
+    for (let i = 0; i < row.length - 1; i++) {
+      row[i] += " ".repeat(baseSpaceCount + (i < restSpaceCount ? 1 : 0));
+    }
+    return row.join("");
+  });
+};
+```
