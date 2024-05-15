@@ -1,4 +1,5 @@
 My video explaining this: https://youtu.be/B8QkJDF4WZw
+
 ```js
 /**
  * Definition for a binary tree node.
@@ -12,14 +13,13 @@ My video explaining this: https://youtu.be/B8QkJDF4WZw
  * @param {TreeNode} root
  * @return {TreeNode}
  */
-var invertTree = function(root) {
-    if (root === null) return root
-    
-    ;[root.left, root.right] = [root.right, root.left]
-  
-    invertTree(root.left)
-    invertTree(root.right)
-  
-    return root
+var invertTree = function (root) {
+  if (root === null) return root;
+  [root.left, root.right] = [root.right, root.left];
+
+  invertTree(root.left);
+  invertTree(root.right);
+
+  return root;
 };
 ```
