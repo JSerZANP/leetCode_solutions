@@ -1,6 +1,5 @@
 Here is my explaining video on this: https://youtu.be/hIXFN-GD754
 
-
 ```js
 /**
  * Definition for a binary tree node.
@@ -22,55 +21,88 @@ Here is my explaining video on this: https://youtu.be/hIXFN-GD754
 //       if (node === null) {
 //         return 0
 //       }
-      
+
 //       return Math.max(_maxDepth(node.left), _maxDepth(node.right)) + 1
 //     }
-    
+
 //     return _maxDepth(root)
 // };
-
 
 // BFS time: O(n)  space O(n/2) O(n)
 // var maxDepth = function(root) {
 //     if (root === null) return 0
-  
+
 //     let depth = 0
 //     const q = [root]
-    
+
 //     while (q.length > 0) {
 //       q.push(null)
-      
-//       let item 
+
+//       let item
 //       while (item = q.shift()) {
 //         if (item.left) q.push(item.left)
 //         if (item.right) q.push(item.right)
 //       }
 //       depth += 1
 //     }
-  
+
 //     return depth
 // };
 
 // DFS time: O(n)  space O(n/2) O(log(n))
-var maxDepth = function(root) {
-    if (root === null) return 0
-  
-    let maxDepth = 0
-    const stack = [[root, 1]]
-    
-    while (stack.length > 0) {
-      const [top, currentDepth] = stack.pop()
-    
-      // leaf node
-      if (!top.left && !top.right) {
-        maxDepth = Math.max(maxDepth, currentDepth)
-      }
-      
-      // if not leaf node
-      if (top.left) stack.push([top.left, currentDepth + 1])
-      if (top.right) stack.push([top.right, currentDepth + 1])
+var maxDepth = function (root) {
+  if (root === null) return 0;
+
+  let maxDepth = 0;
+  const stack = [[root, 1]];
+
+  while (stack.length > 0) {
+    const [top, currentDepth] = stack.pop();
+
+    // leaf node
+    if (!top.left && !top.right) {
+      maxDepth = Math.max(maxDepth, currentDepth);
     }
-  
-    return maxDepth
+
+    // if not leaf node
+    if (top.left) stack.push([top.left, currentDepth + 1]);
+    if (top.right) stack.push([top.right, currentDepth + 1]);
+  }
+
+  return maxDepth;
+};
+```
+
+Another try
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var maxDepth = function (root) {
+  let max = 0;
+  const walk = (node, depth = 0) => {
+    if (node == null) return;
+    if (node.left) {
+      walk(node.left, depth + 1);
+    }
+    if (node.right) {
+      walk(node.right, depth + 1);
+    }
+    if (node.left == null && node.right == null) {
+      max = Math.max(max, depth + 1);
+    }
+  };
+  walk(root);
+  return max;
 };
 ```
