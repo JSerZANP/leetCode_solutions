@@ -1,6 +1,5 @@
 A video explaining this: https://youtu.be/CuMW2upRBc8
 
-
 ```js
 /**
  * @param {string} s
@@ -10,40 +9,40 @@ A video explaining this: https://youtu.be/CuMW2upRBc8
 // var minWindow = function(s, t) {
 //     // ADOBECODEBANC  ABCB
 //     // ADOBECODEBANC
-    
+
 //     // target A1B2C
-    
+
 //     // count, check against target
 //     // missing set [A, B, C]
-  
+
 //     // A          [ B, C]
 //     // .  B       [ B, C]
 //     // .    C     [ B]
 //     // .        B []  => possible solution
-  
+
 //     let result = ''
 //     if (s === '' || t === '') return result
-  
+
 //     // count the target string
 //     const target = new Map()
 //     const count = new Map()
 //     const missingChars = new Set()
 //     const indices = []
-    
+
 //     for (let i = 0; i < t.length; i++) {
 //       if (!target.has(t[i])) {
 //         target.set(t[i], 1)
 //       } else {
 //         target.set(t[i], target.get(t[i]) + 1)
 //       }
-      
+
 //       count.set(t[i], 0)
 //       missingChars.add(t[i])
 //     }
 //     // console.log(target, count, missingChars)
 //     for (let i = 0; i < s.length; i++) {
 //       const char = s[i]
-      
+
 //       // update the count
 //       if (target.has(char)) {
 //         count.set(char, count.get(char) + 1)
@@ -51,7 +50,7 @@ A video explaining this: https://youtu.be/CuMW2upRBc8
 //         if (count.get(char) >= target.get(char)) {
 //           missingChars.delete(char)
 //         }
-        
+
 //         indices.push([char, i])
 //       }
 //       // console.log('checking', s.slice(0, i + 1), (missingChars.size))
@@ -63,107 +62,165 @@ A video explaining this: https://youtu.be/CuMW2upRBc8
 //         if (result === '' || possibleResult.length < result.length) {
 //           result = possibleResult
 //         }
-        
+
 //         // remove the first index
 //         const firstIndex = indices[0]
 //         indices.shift()
 //         // update the count
 //         count.set(firstIndex[0], count.get(firstIndex[0]) - 1)
-//         // update the missing 
+//         // update the missing
 //         if (count.get(firstIndex[0]) < target.get(firstIndex[0])) {
 //           missingChars.add(firstIndex[0])
 //         }
 //       }
 //     }
-  
+
 //     return result
 // };
 
-
-
-var minWindow = function(s, t) {
-
+var minWindow = function (s, t) {
   // keep start, end, then move end along s
-  
+
   // count occurence of the target, when found no missing character, it is possible min substring
   // move start to the right, update counting, until missing character is found
-  
-  const missingChars = new Set()
-  const targetCountMap = new Map()
-  
+
+  const missingChars = new Set();
+  const targetCountMap = new Map();
+
   for (let char of t) {
-    missingChars.add(char)
+    missingChars.add(char);
     if (targetCountMap.has(char)) {
-      targetCountMap.set(char, targetCountMap.get(char) + 1)
+      targetCountMap.set(char, targetCountMap.get(char) + 1);
     } else {
-      targetCountMap.set(char, 1)
+      targetCountMap.set(char, 1);
     }
   }
-  
-  let result = ''
- 
 
-  const countMap = new Map()
-  
+  let result = "";
+
+  const countMap = new Map();
+
   const addCount = (char) => {
     if (countMap.has(char)) {
-      countMap.set(char, countMap.get(char) + 1)
+      countMap.set(char, countMap.get(char) + 1);
     } else {
-      countMap.set(char, 1)
+      countMap.set(char, 1);
     }
-    
+
     if (countMap.get(char) === targetCountMap.get(char)) {
-      missingChars.delete(char)
+      missingChars.delete(char);
     }
-  }
-  
+  };
+
   const removeChar = (char) => {
-    countMap.set(char, countMap.get(char) - 1)
+    countMap.set(char, countMap.get(char) - 1);
     if (countMap.get(char) < targetCountMap.get(char)) {
-      missingChars.add(char)
+      missingChars.add(char);
     }
-  }
-  
+  };
+
   const getNextTargetChar = (i) => {
     while (i < s.length && !targetCountMap.has(s[i])) {
-      i += 1
+      i += 1;
     }
-    
-    return i
-  }
-  
-  
-  let start = getNextTargetChar(0)
-  let end = start
-  
+
+    return i;
+  };
+
+  let start = getNextTargetChar(0);
+  let end = start;
+
   while (end < s.length) {
-  
-    const char = s[end]
-    
+    const char = s[end];
+
     if (targetCountMap.has(char)) {
-      addCount(char)
-      
+      addCount(char);
 
       while (missingChars.size === 0) {
         // possible sub string
-        const subStr = s.slice(start, end + 1)
-        if (result === '' || result.length > subStr.length) {
-          result = subStr
-        }
-      
-        const head = s[start]
-        if (targetCountMap.has(head)) {
-          removeChar(head)
+        const subStr = s.slice(start, end + 1);
+        if (result === "" || result.length > subStr.length) {
+          result = subStr;
         }
 
-        start = getNextTargetChar(start + 1)
+        const head = s[start];
+        if (targetCountMap.has(head)) {
+          removeChar(head);
+        }
+
+        start = getNextTargetChar(start + 1);
       }
     }
-    
-    end = getNextTargetChar(end + 1)
+
+    end = getNextTargetChar(end + 1);
   }
-  
-  
-  return result
+
+  return result;
+};
+```
+
+2nd try, slightly easier-to-understand?
+
+```js
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {string}
+ */
+var minWindow = function (s, t) {
+  // count
+  // sliding window
+  // for each move
+  // if it is candidate
+  //    check if first item could be shifted
+  // otherwise add new letter in
+
+  let i = 0;
+  let j = -1;
+
+  const countWindow = new Map();
+  const countTarget = count(t);
+
+  let result = null;
+
+  while (true) {
+    if (i === s.length || j === s.length) {
+      break;
+    }
+    // if current window could be candidate
+    if (isSubMap(countTarget, countWindow)) {
+      const candidate = s.slice(i, j + 1);
+      result =
+        result == null || result.length > candidate.length ? candidate : result;
+
+      // if left border could be moved
+      if (countWindow.get(s[i]) > (countTarget.get(s[i]) ?? 0)) {
+        countWindow.set(s[i], countWindow.get(s[i]) - 1);
+        i += 1;
+        continue;
+      }
+    }
+    j += 1;
+    countWindow.set(s[j], (countWindow.get(s[j]) ?? 0) + 1);
+  }
+
+  return result ?? "";
+};
+
+function count(str) {
+  const map = new Map();
+  for (const char of str) {
+    map.set(char, (map.get(char) ?? 0) + 1);
+  }
+  return map;
+}
+
+function isSubMap(map1, map2) {
+  for (const [key, value] of map1.entries()) {
+    if (!map2.has(key) || map2.get(key) < value) {
+      return false;
+    }
+  }
+  return true;
 }
 ```
