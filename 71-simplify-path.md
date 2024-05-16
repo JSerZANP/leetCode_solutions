@@ -17,29 +17,57 @@ A video explaining this: https://youtu.be/I-GDJ0VrRXI
 //     }, []).join('/')
 // };
 
-var simplifyPath = function(path) {
-    const chunk = []
-    
-    let lastSlashIndex = 0
-    for (let i = 0; i < path.length + 1; i++) {
-      const char = path[i]
-      if ((i === path.length || char === '/')) {
-        if (lastSlashIndex < i - 1) {
-          const seg = path.slice(lastSlashIndex + 1, i)
-          switch (seg) {
-              case '..':
-                chunk.pop()
-                break
-              case '.':
-                break
-            default:
-              chunk.push(seg)
-          }
+var simplifyPath = function (path) {
+  const chunk = [];
+
+  let lastSlashIndex = 0;
+  for (let i = 0; i < path.length + 1; i++) {
+    const char = path[i];
+    if (i === path.length || char === "/") {
+      if (lastSlashIndex < i - 1) {
+        const seg = path.slice(lastSlashIndex + 1, i);
+        switch (seg) {
+          case "..":
+            chunk.pop();
+            break;
+          case ".":
+            break;
+          default:
+            chunk.push(seg);
         }
-        lastSlashIndex = i
       }
+      lastSlashIndex = i;
     }
-    
-    return '/' + chunk.join('/')
+  }
+
+  return "/" + chunk.join("/");
+};
+```
+
+Another try
+
+```js
+/**
+ * @param {string} path
+ * @return {string}
+ */
+var simplifyPath = function (path) {
+  const segs = path.split("/");
+  // "", ".", "..",
+  let current = [];
+  for (const seg of segs) {
+    switch (seg) {
+      case "":
+        continue;
+      case ".":
+        continue;
+      case "..":
+        current.pop();
+        break;
+      default:
+        current.push(seg);
+    }
+  }
+  return "/" + current.join("/");
 };
 ```
