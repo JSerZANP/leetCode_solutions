@@ -14,7 +14,7 @@ My video explaining it: https://youtu.be/NZFHcLdUgU0
  * @return {Node}
  */
 
-// Time: O(node count) 
+// Time: O(node count)
 // space: O(node count)
 
 // BFS
@@ -22,33 +22,33 @@ My video explaining it: https://youtu.be/NZFHcLdUgU0
 //     if (node === null) return null
 //     // clone Map<node, clonedNode>
 //     // traversed Set
-    
+
 //     // BFS to traverse the graph (use above Set to avoid circle)
 //     // every time when process a node
 //     //     check if it is already traversed
-//     //     for each neighbor, 
+//     //     for each neighbor,
 //     //           if not cloned, create a new node
 //     //           connected the node's clone
 //     //           if it is not traversed
 //     //               push the neighbor into the queue
 //     // return the clonded input node
-  
+
 //     const clonedMap = new Map()
 //     const traversed = new Set()
-    
+
 //     const queue = [node]
-    
+
 //     // clone the head
 //     clonedMap.set(node, new Node(node.val))
-    
+
 //     while (queue.length > 0) {
 //       const head = queue.shift()
 //       if (traversed.has(head)) {
 //         continue
 //       }
-      
+
 //       const clonedHead = clonedMap.get(head)
-      
+
 //       for (let neighbor of head.neighbors) {
 //         if (clonedMap.has(neighbor)) {
 //           clonedHead.neighbors.push(clonedMap.get(neighbor))
@@ -57,82 +57,127 @@ My video explaining it: https://youtu.be/NZFHcLdUgU0
 //           clonedHead.neighbors.push(clonedNeighbor)
 //           clonedMap.set(neighbor, clonedNeighbor)
 //         }
-        
+
 //         // if it not traversed yet, queue it
 //         if (!traversed.has(neighbor)) {
 //           queue.push(neighbor)
 //         }
 //       }
-      
-      
+
 //       traversed.add(head)
 //     }
-  
+
 //     return clonedMap.get(node)
 // };
 
+var cloneGraph = function (node) {
+  if (node === null) return null;
+  // clone Map<node, clonedNode>
+  // traversed Set
 
-var cloneGraph = function(node) {
-    if (node === null) return null
-    // clone Map<node, clonedNode>
-    // traversed Set
-    
-    // BFS to traverse the graph (use above Set to avoid circle)
-    // every time when process a node
-    //     check if it is already traversed
-    //     for each neighbor, 
-    //           if not cloned, create a new node
-    //           connected the node's clone
-    //           if it is not traversed
-    //               push the neighbor into the queue
-    // return the clonded input node
-  
-    const clonedMap = new Map()
-    const traversed = new Set()
-    
-    const stack = [node]
-    
-    // clone the head
-    clonedMap.set(node, new Node(node.val))
-    
-    while (stack.length > 0) {
-      const top = stack.pop()
+  // BFS to traverse the graph (use above Set to avoid circle)
+  // every time when process a node
+  //     check if it is already traversed
+  //     for each neighbor,
+  //           if not cloned, create a new node
+  //           connected the node's clone
+  //           if it is not traversed
+  //               push the neighbor into the queue
+  // return the clonded input node
 
-      if (traversed.has(top)) {
-        continue
-      }
-      
-      const clonedHead = clonedMap.get(top)
-      
-      for (let neighbor of top.neighbors) {
-        if (clonedMap.has(neighbor)) {
-          clonedHead.neighbors.push(clonedMap.get(neighbor))
-        } else {
-          const clonedNeighbor = new Node(neighbor.val)
-          clonedHead.neighbors.push(clonedNeighbor)
-          clonedMap.set(neighbor, clonedNeighbor)
-        }
-        
-        // if it not traversed yet, queue it
-        if (!traversed.has(neighbor)) {
-          stack.push(neighbor)
-        }
-      }
-      
-      
-      traversed.add(top)
+  const clonedMap = new Map();
+  const traversed = new Set();
+
+  const stack = [node];
+
+  // clone the head
+  clonedMap.set(node, new Node(node.val));
+
+  while (stack.length > 0) {
+    const top = stack.pop();
+
+    if (traversed.has(top)) {
+      continue;
     }
-  
-    return clonedMap.get(node)
+
+    const clonedHead = clonedMap.get(top);
+
+    for (let neighbor of top.neighbors) {
+      if (clonedMap.has(neighbor)) {
+        clonedHead.neighbors.push(clonedMap.get(neighbor));
+      } else {
+        const clonedNeighbor = new Node(neighbor.val);
+        clonedHead.neighbors.push(clonedNeighbor);
+        clonedMap.set(neighbor, clonedNeighbor);
+      }
+
+      // if it not traversed yet, queue it
+      if (!traversed.has(neighbor)) {
+        stack.push(neighbor);
+      }
+    }
+
+    traversed.add(top);
+  }
+
+  return clonedMap.get(node);
 };
+```
 
+Another try
 
+```js
+/**
+ * // Definition for a Node.
+ * function Node(val, neighbors) {
+ *    this.val = val === undefined ? 0 : val;
+ *    this.neighbors = neighbors === undefined ? [] : neighbors;
+ * };
+ */
 
+/**
+ * @param {Node} node
+ * @return {Node}
+ */
+var cloneGraph = function (node) {
+  if (node == null) return null;
+  // traverse the graph while create the clone lazily
+  const visited = new Set();
+  const clones = new Map();
 
+  const getClone = (node) => {
+    if (clones.has(node)) {
+      return clones.get(node);
+    }
+    const clone = new Node(node.val);
+    // neighbors need to be set
+    clones.set(node, clone);
+    return clone;
+  };
 
+  const newRoot = getClone(node);
 
+  const walk = (node) => {
+    if (node == null) return;
+    console.log("walk", node.val);
+    if (visited.has(node)) {
+      return;
+    }
 
+    visited.add(node);
+    const clone = getClone(node);
+    for (const neighbor of node.neighbors) {
+      const cloneNeighbor = getClone(neighbor);
+      clone.neighbors.push(cloneNeighbor);
 
+      if (!visited.has(neighbor)) {
+        walk(neighbor);
+      }
+    }
+  };
 
+  walk(node);
 
+  return newRoot;
+};
 ```
