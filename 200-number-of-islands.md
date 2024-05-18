@@ -129,3 +129,67 @@ var numIslands = function (grid) {
   return count;
 };
 ```
+
+Another try
+
+```js
+/**
+ * @param {character[][]} grid
+ * @return {number}
+ */
+var numIslands = function (grid) {
+  const rows = grid.length;
+  const cols = grid[0].length;
+  // start from a cell of 1
+  // and tain all the cells into 2
+  // for each round increase the island count
+  // tain => BFS
+  let count = 0;
+
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  grid.forEach((row, i) => {
+    row.forEach((num, j) => {
+      if (num === "1") {
+        taint(i, j);
+      }
+    });
+  });
+
+  function taint(i, j) {
+    count += 1;
+
+    const queue = [[i, j]];
+    while (queue.length > 0) {
+      let size = queue.length;
+      while (size > 0) {
+        const head = queue.shift();
+        if (grid[head[0]][head[1]] === "1") {
+          grid[head[0]][head[1]] = 2;
+
+          for (const direction of directions) {
+            const next = [head[0] + direction[0], head[1] + direction[1]];
+            if (
+              next[0] >= 0 &&
+              next[0] < rows &&
+              next[1] >= 0 &&
+              next[1] < cols &&
+              grid[next[0]][next[1]] === "1"
+            ) {
+              queue.push(next);
+            }
+          }
+        }
+        size -= 1;
+      }
+    }
+  }
+
+  return count;
+};
+```
