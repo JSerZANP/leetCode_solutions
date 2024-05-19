@@ -63,18 +63,18 @@ var findPeakElement = function (nums) {
   // if a numbeer smaller than both, then either side is fun
 
   // Binary search
-  nums.unshift(-Infinity);
-  nums.push(Infinity);
-
-  let i = 1;
-  let j = nums.length - 2;
+  let i = 0;
+  let j = nums.length - 1;
 
   while (i <= j) {
     const mid = Math.floor((i + j) / 2);
-    if (nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1]) {
-      return mid - 1;
+    if (
+      nums[mid] > (nums[mid - 1] ?? -Infinity) &&
+      nums[mid] > (nums[mid + 1] ?? -Infinity)
+    ) {
+      return mid;
     }
-    if (nums[mid] < nums[mid - 1]) {
+    if (nums[mid] < (nums[mid - 1] ?? -Infinity)) {
       j = mid - 1;
     } else {
       i = mid + 1;
@@ -82,6 +82,6 @@ var findPeakElement = function (nums) {
   }
 
   // when i j meets, it must be the peak
-  return i - 1;
+  return i;
 };
 ```
