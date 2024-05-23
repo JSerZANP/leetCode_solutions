@@ -77,3 +77,98 @@ function isMutation(a, b) {
   return true;
 }
 ```
+
+Another try in 2024
+
+```js
+/**
+ * @param {string} startGene
+ * @param {string} endGene
+ * @param {string[]} bank
+ * @return {number}
+ */
+var minMutation = function (startGene, endGene, bank) {
+  // one mutation => count the indices where digits are different
+  // shortest -> BFS
+
+  // undirectional GRAPH
+  // edge => only one mutation
+  // we'll calculate the edges for startGene | bank
+
+  // Map<string, Set<string>>
+  const graph = new Map();
+
+  const createEdge = (from, to) => {
+    if (!graph.has(from)) {
+      graph.set(from, new Set());
+    }
+    graph.get(from).add(to);
+    if (!graph.has(to)) {
+      graph.set(to, new Set());
+    }
+    graph.get(to).add(from);
+  };
+
+  for (let i = 0; i < bank.length - 1; i++) {
+    for (let j = i + 1; j < bank.length; j++) {
+      if (isMutation(bank[i], bank[j])) {
+        createEdge(bank[i], bank[j]);
+      }
+    }
+  }
+
+  if (!graph.has(startGene)) {
+    for (let i = 0; i < bank.length; i++) {
+      if (bank[i] === startGene) {
+        return -1;
+      }
+
+      if (isMutation(bank[i], startGene)) {
+        createEdge(bank[i], startGene);
+      }
+    }
+  }
+
+  const queue = [startGene];
+  const visited = new Set();
+  let steps = 0;
+
+  while (queue.length > 0) {
+    let count = queue.length;
+    while (count > 0) {
+      const head = queue.shift();
+      if (head === endGene) {
+        return steps;
+      }
+
+      if (!visited.has(head)) {
+        visited.add(head);
+        const nodes = graph.get(head);
+        if (nodes != null) {
+          nodes.forEach((gene) => {
+            queue.push(gene);
+          });
+        }
+      }
+
+      count -= 1;
+    }
+    steps += 1;
+  }
+
+  return -1;
+};
+
+function isMutation(from, to) {
+  let differences = 0;
+  for (let i = 0; i < from.length; i++) {
+    if (from[i] !== to[i]) {
+      differences += 1;
+    }
+    if (differences > 1) {
+      return false;
+    }
+  }
+  return true;
+}
+```
