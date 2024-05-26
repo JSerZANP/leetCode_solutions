@@ -138,3 +138,66 @@ var exist = function (board, word) {
   return false;
 };
 ```
+
+Another try in 2024, global cursor
+
+```js
+/**
+ * @param {character[][]} board
+ * @param {string} word
+ * @return {boolean}
+ */
+var exist = function (board, word) {
+  const rows = board.length;
+  if (rows === 0) return false;
+  const cols = board[0].length;
+  if (cols === 0) return false;
+  // just search all possible positions
+  // keep a cursor of the letters in word
+  let nextTargetIndex = 0;
+
+  const visited = new Array(rows)
+    .fill(0)
+    .map((_) => new Array(cols).fill(false));
+
+  const tryMatch = (i, j) => {
+    if (nextTargetIndex >= word.length) {
+      return true;
+    }
+    if (i < 0 || i >= rows || j < 0 || j >= cols) {
+      return false;
+    }
+    if (visited[i][j]) {
+      return false;
+    }
+
+    if (board[i][j] !== word[nextTargetIndex]) {
+      return false;
+    }
+
+    let result = false;
+    // matched
+    visited[i][j] = true;
+    nextTargetIndex += 1;
+
+    result =
+      tryMatch(i + 1, j) ||
+      tryMatch(i - 1, j) ||
+      tryMatch(i, j + 1) ||
+      tryMatch(i, j - 1);
+
+    nextTargetIndex -= 1;
+    visited[i][j] = false;
+    return result;
+  };
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (tryMatch(i, j)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+```
