@@ -159,7 +159,6 @@ var cloneGraph = function (node) {
 
   const walk = (node) => {
     if (node == null) return;
-    console.log("walk", node.val);
     if (visited.has(node)) {
       return;
     }
