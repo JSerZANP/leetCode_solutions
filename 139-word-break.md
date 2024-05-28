@@ -162,3 +162,139 @@ var wordBreak = function (s, wordDict) {
   return canMatchEndAt[s.length - 1];
 };
 ```
+
+Another try in 2024, using prefix tree.
+
+Potentially every index we'll check it once. O(N \* N)
+
+```js
+/**
+ * @param {string} s
+ * @param {string[]} wordDict
+ * @return {boolean}
+ */
+var wordBreak = function (s, wordDict) {
+  // try at each index
+  // try match the word and use recursion
+  const trie = new Trie();
+  for (const word of wordDict) {
+    trie.insert(word);
+  }
+
+  const cache = new Map();
+  const tryMatch = (i) => {
+    if (cache.has(i)) return cache.get(i);
+    if (i === s.length) {
+      cache.set(i, true);
+      return true;
+    }
+    // check all substrings and check if there is a word in the dict
+    // lee
+    // l
+    /// le
+    // lee
+
+    // we actually need a prefix tree
+    // for each j, we check if there is a prefix in the dict
+    // if it, it is a possible break point, otherwise stop
+    let buffer = "";
+    let p = trie.root;
+    for (let j = i; j < s.length; j++) {
+      // check if there is a word in the trie tree
+      if (p.children.has(s[j])) {
+        p = p.children.get(s[j]);
+        // it means p is the end of a wor
+        if (p.children.has(Trie.EOW)) {
+          if (tryMatch(j + 1)) {
+            cache.set(i, true);
+
+            return true;
+          }
+        }
+      } else {
+        break;
+      }
+    }
+    cache.set(i, false);
+    return false;
+  };
+
+  return tryMatch(0);
+};
+
+class TrieNode {
+  constructor(val) {
+    this.val = val;
+    /** @type Map<string, TrieNode> */
+    this.children = new Map();
+  }
+}
+
+var Trie = function () {
+  this.root = new TrieNode(-1);
+};
+
+Trie.EOW = Symbol();
+
+/**
+ * @param {string} word
+ * @return {void}
+ */
+Trie.prototype.insert = function (word) {
+  // insert a word in the Trie
+  // add a ending identifier
+  let p = this.root;
+  for (const char of word) {
+    if (!p.children.has(char)) {
+      p.children.set(char, new TrieNode(char));
+    }
+    p = p.children.get(char);
+  }
+  // p stops at the node of last char
+  p.children.set(Trie.EOW, true);
+};
+
+/**
+ * @param {string} word
+ * @return {boolean}
+ */
+Trie.prototype.search = function (word) {
+  // trverse the characters
+  // check EOW
+  let p = this.root;
+  for (const char of word) {
+    if (!p.children.has(char)) {
+      return false;
+    }
+    p = p.children.get(char);
+  }
+  // p stops at the node of last character
+  return p.children.has(Trie.EOW);
+};
+
+/**
+ * @param {string} prefix
+ * @return {boolean}
+ */
+Trie.prototype.startsWith = function (prefix) {
+  // trverse the characters
+  // check EOW
+  let p = this.root;
+  for (const char of prefix) {
+    if (!p.children.has(char)) {
+      return false;
+    }
+    p = p.children.get(char);
+  }
+  // p stops at the node of last character
+  return true;
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * var obj = new Trie()
+ * obj.insert(word)
+ * var param_2 = obj.search(word)
+ * var param_3 = obj.startsWith(prefix)
+ */
+```
